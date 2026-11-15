@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B5D3B">
+<title>회의록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F2; --card:#FFFFFF; --ink:#17231D; --mute:#5E6B64; --line:#DDE3DE;
+  --brand:#0B5D3B; --brand2:#1D5543; --brand-soft:#E3F0E9; --on-brand:#FFFFFF;
+  --danger:#B23A2E; --danger-soft:#FBE9E6; --warn:#9A6400; --warn-soft:#FFF3D6;
+  --shadow:0 1px 2px rgba(16,40,28,.06),0 4px 14px rgba(16,40,28,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0F1512; --card:#18211C; --ink:#E6EDE8; --mute:#9AA8A0; --line:#2A362F;
+    --brand:#3FAE7C; --brand2:#2E8A61; --brand-soft:#1B3328; --on-brand:#08130D;
+    --danger:#F08A7E; --danger-soft:#3A1F1B; --warn:#F0C36A; --warn-soft:#3A2F14;
+    --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;line-height:1.55;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding:10px 16px 0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.logo{font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--brand)}
+.recflag{margin-left:auto;background:var(--danger-soft);color:var(--danger);border:0;border-radius:999px;padding:4px 12px;font-weight:600;font-size:13px;cursor:pointer;font-variant-numeric:tabular-nums}
+nav.tabs{display:flex;gap:2px;width:100%;overflow-x:auto}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:9px 12px;font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap}
+nav.tabs button.on{color:var(--brand);border-bottom-color:var(--brand)}
+main{max-width:960px;margin:0 auto;padding:18px 16px 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+h2{font-size:18px;margin:0 0 12px;letter-spacing:-.01em}
+h3{font-size:14px;margin:0 0 8px;color:var(--brand);letter-spacing:.02em}
+.muted{color:var(--mute)} .small{font-size:13px}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:10px}
+label.f>input,label.f>select,label.f>textarea{display:block;width:100%;margin-top:4px}
+input[type=text],input[type=password],input[type=search],input[type=number],input[type=date],input[type=datetime-local],select,textarea{
+  background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;min-height:40px;font-weight:400;color:var(--ink);min-width:0}
+input:focus,select:focus,textarea:focus,[contenteditable]:focus{outline:2px solid var(--brand);outline-offset:1px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:8px 14px;min-height:40px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--brand)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.btn.danger{color:var(--danger)}
+.btn.sm{min-height:32px;padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp{flex:1}
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;background:var(--brand-soft);color:var(--brand);white-space:nowrap}
+.badge.gray{background:var(--bg);color:var(--mute);border:1px solid var(--line)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.red{background:var(--danger-soft);color:var(--danger)}
+.note{border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.err{background:var(--danger-soft);color:var(--danger);white-space:pre-wrap;word-break:break-word}
+.note.info{background:var(--brand-soft);color:var(--brand)}
+/* record */
+.recbox{text-align:center;padding:26px 12px}
+.recbtn{width:112px;height:112px;border-radius:50%;border:6px solid var(--danger-soft);background:var(--danger);color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+.timer{font-size:52px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin:6px 0}
+.meter{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;max-width:360px;margin:10px auto 18px;border:1px solid var(--line)}
+.meter>i{display:block;height:100%;width:0;background:var(--brand);transition:width .08s}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--danger);margin-right:6px;animation:blink 1.2s infinite}
+.paused .dot{animation:none;background:var(--mute)}
+@keyframes blink{50%{opacity:.25}}
+/* list */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:10px 0 14px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--mute)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.item{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:9px;cursor:pointer}
+.item:hover{border-color:var(--brand)}
+.item .t{font-weight:600;font-size:16px;margin:3px 0;overflow-wrap:anywhere}
+.item .s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13px;color:var(--mute)}
+.empty{text-align:center;padding:40px 10px;color:var(--mute)}
+/* detail */
+.title-in{font-size:20px!important;font-weight:700!important;width:100%}
+audio{width:100%;margin-top:6px}
+.ed{border-radius:6px;padding:1px 3px;margin:-1px -3px;overflow-wrap:anywhere}
+.ed:hover{background:var(--bg)}
+ul.pts{margin:4px 0 12px;padding-left:20px} ul.pts li{margin:3px 0}
+.topic-t{font-weight:700;margin-top:10px}
+.act{display:grid;grid-template-columns:26px 1fr 130px 150px 34px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.act input[type=checkbox]{width:19px;height:19px;accent-color:var(--brand)}
+.act.done input[type=text]{text-decoration:line-through;color:var(--mute)}
+.act .x{border:0;background:none;color:var(--mute);cursor:pointer;font-size:18px;min-height:32px}
+@media (max-width:640px){.act{grid-template-columns:26px 1fr 1fr 34px}.act .task{grid-column:2 / 5}.act .own{grid-column:2}.act .due{grid-column:3}.act .x{grid-column:4;grid-row:1}.act input[type=checkbox]{grid-row:1}}
+.spk{display:grid;grid-template-columns:14px 170px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.spk i{width:12px;height:12px;border-radius:50%}
+@media (max-width:640px){.spk{grid-template-columns:14px 1fr auto}.spk .hint{grid-column:2 / 4}}
+.seg{display:grid;grid-template-columns:58px 120px 1fr;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line);align-items:start}
+.seg .tm{border:0;background:none;color:var(--brand);font-weight:600;cursor:pointer;text-align:left;padding:2px 0;font-variant-numeric:tabular-nums}
+.seg select{min-height:30px;padding:2px 6px;font-size:13px;width:100%}
+@media (max-width:640px){.seg{grid-template-columns:58px 1fr}.seg .tx{grid-column:1 / 3}}
+details>summary{cursor:pointer;font-weight:700;color:var(--brand);padding:4px 0}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--brand-soft);border-top-color:var(--brand);border-radius:50%;animation:rot .8s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.gact{display:grid;grid-template-columns:26px 1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);align-items:start}
+.gact input{width:19px;height:19px;accent-color:var(--brand);margin-top:2px}
+.gact.done .tk{text-decoration:line-through;color:var(--mute)}
+.link{background:none;border:0;padding:0;color:var(--brand);cursor:pointer;text-decoration:underline;font-size:13px;text-align:left}
+.catrow{display:flex;gap:6px;margin-bottom:6px}
+.catrow input{flex:1}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw}
+#toast.on{opacity:.95}
+#print{display:none}
+@media print{
+  body{background:#fff;color:#111;font-size:11pt}
+  body>*:not(#print){display:none!important}
+  #print{display:block}
+  #print h1{font-size:18pt;margin:0 0 4pt}
+  #print .pm{color:#444;font-size:10pt;margin-bottom:10pt;border-bottom:1.5pt solid #0B5D3B;padding-bottom:8pt}
+  #print h2{font-size:12pt;color:#0B5D3B;margin:14pt 0 5pt;break-after:avoid}
+  #print table{width:100%;border-collapse:collapse;font-size:10pt}
+  #print th{background:#1D5543;color:#fff;text-align:left;padding:5pt 6pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #print td{border-bottom:.5pt solid #bbb;padding:5pt 6pt;vertical-align:top}
+  #print ul{margin:2pt 0 6pt;padding-left:16pt}
+  #print .tt{font-weight:700;margin-top:6pt}
+  #print .tr{font-size:9.5pt;margin:2pt 0}
+  #print .ft{margin-top:16pt;font-size:8.5pt;color:#666}
+  @page{margin:16mm 15mm}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="logo">회의록</div>
+  <span id="recflag"></span>
+  <nav class="tabs" id="tabs"></nav>
+</div></header>
+<main id="main"></main>
+<div id="toast"></div>
+<div id="print"></div>
+
+<script>
+'use strict';
+/* ───────── 기본 도구 ───────── */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const pad=n=>String(n).padStart(2,'0');
+const DAY=86400000;
+function fmtDur(s){s=Math.max(0,Math.round(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':':'')+pad(m)+':'+pad(x)}
+function ymd(d){d=new Date(d);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function fmtDate(iso){const d=new Date(iso);return ymd(d)+' ('+'일월화수목금토'[d.getDay()]+') '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function toLocalInput(iso){const d=new Date(iso);return ymd(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtSize(b){return b>1048576?(b/1048576).toFixed(1)+'MB':Math.round(b/1024)+'KB'}
+let toastT;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2600)}
+const SPK_COLORS=['#0B5D3B','#DF6F21','#2A5973','#8E4FA8','#B23A2E','#41BDED','#7A8B2A','#C2528B','#555F66','#17778F'];
+
+/* ───────── 저장소 (IndexedDB + localStorage) ───────── */
+let _db;
+function db(){return _db||(_db=new Promise((res,rej)=>{const r=indexedDB.open('meeting-minutes',1);
+  r.onupgradeneeded=()=>{r.result.createObjectStore('meetings',{keyPath:'id'});r.result.createObjectStore('audio',{keyPath:'id'})};
+  r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))}
+async function idb(store,mode,fn){const d=await db();return new Promise((res,rej)=>{const tx=d.transaction(store,mode);const rq=fn(tx.objectStore(store));
+  tx.oncomplete=()=>res(rq&&rq.result);tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
+const idbAll=s=>idb(s,'readonly',o=>o.getAll());
+const idbGet=(s,k)=>idb(s,'readonly',o=>o.get(k));
+const idbPut=(s,v)=>idb(s,'readwrite',o=>o.put(v));
+const idbDel=(s,k)=>idb(s,'readwrite',o=>o.delete(k));
+
+const DEFAULTS={apiKey:'',model:'gemini-2.5-flash',models:[],lang:'ko',retentionDays:14,includeTranscript:true,
+  categories:['MBO Meeting','Weekly FCST','Demand Meeting','Sales Manager Meeting','Closing Meeting','리테일러 미팅','타부서 미팅','팀 미팅','기타']};
+let S=Object.assign({},DEFAULTS);
+try{Object.assign(S,JSON.parse(localStorage.getItem('mm-settings')||'{}'))}catch(e){}
+function saveS(){try{localStorage.setItem('mm-settings',JSON.stringify(S))}catch(e){}}
+
+const state={view:'record',meetings:[],cur:null,cat:'',q:'',openOnly:true,owner:'',pdfTranscript:false,
+  draft:{title:'',category:S.categories[0]||'기타',attendees:'',sys:false}};
+const M=id=>state.meetings.find(m=>m.id===id);
+const saveM=m=>idbPut('meetings',m);
+
+/* ───────── 화자 이름 처리 ───────── */
+function spkName(m,id){const s=(m.result?.speakers||[]).find(x=>x.id===id);return s?s.name:id}
+function resolve(m,t){return String(t??'').replace(/\[(S\d+)\]/g,(_,id)=>spkName(m,id))}
+function ownerName(m,o){return /^S\d+$/.test(o||'')?spkName(m,o):(o||'')}
+function ownerStore(m,name){name=name.trim();const s=(m.result?.speakers||[]).find(x=>x.name===name);return s?s.id:name}
+
+/* ───────── 녹음 ───────── */
+let rec=null;
+function pickMime(){if(!window.MediaRecorder)return null;
+  return ['audio/ogg;codecs=opus','audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t))||''}
+function recElapsed(){if(!rec)return 0;const now=rec.pauseAt||Date.now();return (now-rec.start-rec.pausedMs)/1000}
+async function startRec(){
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){alert('이 브라우저에서는 녹음을 사용할 수 없습니다.\n휴대폰에서는 https 주소로 열어야 마이크를 쓸 수 있습니다. (설정 탭의 안내 참고)\n대신 "음성 파일 불러오기"는 사용할 수 있습니다.');return}
+  let mic,disp=null,ctx=null,analyser=null,stream;
+  try{
+    mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  }catch(e){alert('마이크를 사용할 수 없습니다: '+e.message+'\n브라우저의 마이크 권한을 확인해 주세요.');return}
+  try{
+    ctx=new (window.AudioContext||window.webkitAudioContext)();ctx.resume?.();
+    analyser=ctx.createAnalyser();analyser.fftSize=512;
+    const ms=ctx.createMediaStreamSource(mic);ms.connect(analyser);
+    stream=mic;
+    if(state.draft.sys&&navigator.mediaDevices.getDisplayMedia){
+      disp=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});
+      if(disp.getAudioTracks().length){
+        const dest=ctx.createMediaStreamDestination();ms.connect(dest);
+        const ds=ctx.createMediaStreamSource(new MediaStream(disp.getAudioTracks()));ds.connect(dest);ds.connect(analyser);
+        stream=dest.stream;
+      }else{toast('공유한 화면에 소리가 포함되지 않아 마이크만 녹음합니다');disp.getTracks().forEach(t=>t.stop());disp=null}
+    }
+  }catch(e){ if(disp){disp.getTracks().forEach(t=>t.stop());disp=null} stream=mic; toast('PC 소리 없이 마이크만 녹음합니다') }
+  const mime=pickMime();
+  let mr;
+  try{mr=new MediaRecorder(stream,Object.assign({audioBitsPerSecond:48000},mime?{mimeType:mime}:{}))}
+  catch(e){mr=new MediaRecorder(stream)}
+  rec={mr,chunks:[],mic,disp,ctx,analyser,start:Date.now(),pausedMs:0,pauseAt:0,cancel:false,wake:null};
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)rec.chunks.push(e.data)};
+  mr.onstop=finishRec;
+  mr.start(5000);
+  try{rec.wake=await navigator.wakeLock?.request('screen')}catch(e){}
+  rec.tick=setInterval(tickRec,500);
+  const buf=new Uint8Array(analyser.fftSize);
+  (function loop(){if(!rec)return;analyser.getByteTimeDomainData(buf);let pk=0;for(const v of buf)pk=Math.max(pk,Math.abs(v-128));
+    const el=$('#meter');if(el)el.style.width=Math.min(100,pk/128*220)+'%';requestAnimationFrame(loop)})();
+  render();
+}
+function tickRec(){const t=fmtDur(recElapsed());const a=$('#recTimer');if(a)a.textContent=t;
+  $('#recflag').innerHTML=rec?`<button class="recflag" data-act="nav" data-v="record">● ${rec.pauseAt?'일시정지':'녹음 중'} ${t}</button>`:''}
+function pauseRec(){if(!rec)return;if(rec.pauseAt){rec.pausedMs+=Date.now()-rec.pauseAt;rec.pauseAt=0;rec.mr.resume()}else{rec.pauseAt=Date.now();rec.mr.pause()}render()}
+function stopRec(cancel){if(!rec)return;rec.cancel=!!cancel;rec.dur=recElapsed();try{rec.mr.stop()}catch(e){finishRec()}}
+async function finishRec(){
+  const r=rec;if(!r)return;rec=null;clearInterval(r.tick);
+  r.mic.getTracks().forEach(t=>t.stop());r.disp?.getTracks().forEach(t=>t.stop());try{r.ctx?.close()}catch(e){}try{r.wake?.release()}catch(e){}
+  $('#recflag').innerHTML='';
+  if(r.cancel){toast('녹음을 취소했습니다');render();return}
+  const blob=new Blob(r.chunks,{type:r.mr.mimeType||r.chunks[0]?.type||'audio/webm'});
+  if(!blob.size){alert('녹음된 음성이 없습니다.');render();return}
+  await newMeeting(blob,r.dur,new Date(r.start));
+}
+async function newMeeting(blob,dur,date){
+  const d=state.draft;
+  const m={id:uid(),title:d.title.trim(),category:d.category,attendees:d.attendees.trim(),date:date.toISOString(),createdAt:Date.now(),
+    durationSec:Math.round(dur||0),status:'recorded',hasAudio:true,audioSize:blob.size,audioMime:blob.type,result:null};
+  try{await idbPut('audio',{id:m.id,blob});await saveM(m)}
+  catch(e){alert('저장에 실패했습니다: '+e.message+'\n기기 저장 공간을 확인해 주세요.');return}
+  navigator.storage?.persist?.().catch(()=>{});
+  state.meetings.unshift(m);state.draft.title='';state.draft.attendees='';
+  state.cur=m.id;state.view='detail';render();
+  if(S.apiKey)analyze(m.id);else toast('설정 탭에서 Gemini API 키를 입력하면 요약을 만들 수 있습니다');
+}
+async function importAudio(file){
+  if(!file)return;
+  let dur=0;
+  try{dur=await new Promise(res=>{const a=new Audio();a.preload='metadata';a.onloadedmetadata=()=>res(isFinite(a.duration)?a.duration:0);a.onerror=()=>res(0);a.src=URL.createObjectURL(file);setTimeout(()=>res(0),4000)})}catch(e){}
+  if(!state.draft.title)state.draft.title=file.name.replace(/\.[^.]+$/,'');
+  await newMeeting(file,dur,new Date(file.lastModified||Date.now()));
+}
+
+/* ───────── Gemini ───────── */
+const GBASE='https://generativelanguage.googleapis.com';
+async function gfetch(url,opt={}){
+  opt.headers=Object.assign({'x-goog-api-key':S.apiKey},opt.headers||{});
+  let res;try{res=await fetch(url,opt)}catch(e){const er=new Error('Gemini 서버에 연결하지 못했습니다. 네트워크(회사 방화벽 포함)를 확인해 주세요. ('+e.message+')');er.net=true;throw er}
+  if(!res.ok){let msg=res.status+' '+res.statusText;try{const j=await res.json();msg=j.error?.message||msg}catch(e){}
+    const er=new Error(msg);er.status=res.status;throw er}
+  return res;
+}
+async function loadModels(){
+  const j=await (await gfetch(GBASE+'/v1beta/models?pageSize=200')).json();
+  const list=(j.models||[]).filter(x=>(x.supportedGenerationMethods||[]).includes('generateContent'))
+    .map(x=>x.name.replace('models/','')).filter(n=>/^gemini/.test(n)&&!/embedding|image|tts|live|audio-|computer|robotics/.test(n)).sort().reverse();
+  S.models=list;if(list.length&&!list.includes(S.model))S.model=list.find(n=>/flash/.test(n)&&!/lite|preview|exp/.test(n))||list[0];
+  saveS();return list;
+}
+function cleanMime(t,name=''){t=(t||'').split(';')[0].trim().toLowerCase();
+  const ext=(name.split('.').pop()||'').toLowerCase();
+  if(!t||t==='application/octet-stream')t={mp3:'audio/mp3',m4a:'audio/m4a',wav:'audio/wav',ogg:'audio/ogg',webm:'audio/webm',aac:'audio/aac',flac:'audio/flac',mp4:'audio/mp4'}[ext]||'audio/webm';
+  return ({'audio/mpeg':'audio/mp3','audio/x-m4a':'audio/m4a','audio/x-wav':'audio/wav','audio/wave':'audio/wav','video/webm':'audio/webm','video/mp4':'audio/mp4'})[t]||t}
+async function uploadFile(blob,mime,onP){
+  onP('음성 업로드 중…');
+  const st=await gfetch(GBASE+'/upload/v1beta/files',{method:'POST',headers:{'X-Goog-Upload-Protocol':'resumable','X-Goog-Upload-Command':'start',
+    'X-Goog-Upload-Header-Content-Length':String(blob.size),'X-Goog-Upload-Header-Content-Type':mime,'Content-Type':'application/json'},
+    body:JSON.stringify({file:{display_name:'meeting-audio'}})});
+  const url=st.headers.get('x-goog-upload-url');if(!url)throw new Error('업로드 주소를 받지 못했습니다');
+  const up=await gfetch(url,{method:'POST',headers:{'X-Goog-Upload-Offset':'0','X-Goog-Upload-Command':'upload, finalize'},body:blob});
+  let f=(await up.json()).file;
+  for(let i=0;f.state==='PROCESSING'&&i<120;i++){onP('음성 처리 대기 중…');await new Promise(r=>setTimeout(r,2500));f=await (await gfetch(GBASE+'/v1beta/'+f.name)).json()}
+  if(f.state&&f.state!=='ACTIVE')throw new Error('Gemini가 음성 파일을 처리하지 못했습니다 ('+f.state+')');
+  return f;
+}
+async function toB64(blob){const b=new Uint8Array(await blob.arrayBuffer());let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)}
+async function toWav(blob){
+  const AC=window.AudioContext||window.webkitAudioContext;const ctx=new AC();
+  const src=await ctx.decodeAudioData(await blob.arrayBuffer());ctx.close();
+  const rate=16000,off=new OfflineAudioContext(1,Math.ceil(src.duration*rate),rate);
+  const n=off.createBufferSource();n.buffer=src;n.connect(off.destination);n.start();
+  const pcm=(await off.startRendering()).getChannelData(0);
+  const buf=new ArrayBuffer(44+pcm.length*2),v=new DataView(buf);const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+pcm.length*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,pcm.length*2,true);
+  for(let i=0;i<pcm.length;i++){const x=Math.max(-1,Math.min(1,pcm[i]));v.setInt16(44+i*2,x<0?x*0x8000:x*0x7FFF,true)}
+  return new Blob([buf],{type:'audio/wav'});
+}
+const STR={type:'STRING'},ARR=i=>({type:'ARRAY',items:i});
+const SCHEMA={type:'OBJECT',required:['title','summary','topics','decisions','action_items','speakers','transcript'],properties:{
+  title:STR,summary:STR,
+  topics:ARR({type:'OBJECT',required:['title','points'],properties:{title:STR,points:ARR(STR)}}),
+  decisions:ARR(STR),
+  action_items:ARR({type:'OBJECT',required:['task','owner','due'],properties:{task:STR,owner:STR,due:STR}}),
+  speakers:ARR({type:'OBJECT',required:['id','guess_name','description'],properties:{id:STR,guess_name:STR,description:STR}}),
+  transcript:ARR({type:'OBJECT',required:['time','speaker','text'],properties:{time:STR,speaker:STR,text:STR}})}};
+function buildPrompt(m,withTr){
+  const lang=S.lang==='en'?'English':'한국어 (영어 고유명사·업무 용어는 원문 그대로 유지)';
+  return `당신은 회의록 작성 전문가입니다. 첨부된 회의 녹음을 끝까지 듣고, 지정된 JSON 형식으로 회의록을 작성하세요.
+
+[회의 정보]
+- 제목: ${m.title||'(미입력 — 내용에 맞는 제목을 title에 제안)'}
+- 회의 종류: ${m.category}
+- 일시: ${fmtDate(m.date)}
+- 참석자(사용자 입력): ${m.attendees||'미입력'}
+
+[작성 규칙]
+1. speakers: 목소리를 기준으로 화자를 구분해 S1, S2, … ID를 부여합니다. 대화 중 이름·직함이 불리거나 참석자 목록과 확실히 대응될 때만 guess_name에 이름을 적고, 불확실하면 빈 문자열로 둡니다. description에는 그 화자를 알아볼 수 있는 특징(역할, 주로 말한 내용)을 한 줄로 적습니다.
+2. summary: 회의 전체를 3~6문장으로 요약합니다.
+3. topics: 안건별로 논의 내용을 정리합니다. points는 간결한 개조식으로, 수치·날짜·고유명사는 정확히 적습니다.
+4. decisions: 회의에서 확정된 결정 사항만 적습니다. 없으면 빈 배열.
+5. action_items: 누가(owner) 무엇을(task) 언제까지(due) 할지 적습니다. owner는 화자이면 화자 ID(S1 등), 화자가 아닌 사람·조직이면 그 이름, 불명확하면 빈 문자열. due는 회의 일시를 기준으로 환산한 YYYY-MM-DD, 언급이 없으면 빈 문자열.
+6. summary·topics·decisions·task 문장에서 화자를 가리킬 때는 [S1]처럼 대괄호 ID로 표기합니다.
+7. transcript: ${withTr?'발언 순서대로 time(녹음 시작 기준 MM:SS), speaker(화자 ID), text를 적습니다. 군말은 정리하되 의미는 그대로 유지합니다.':'빈 배열로 둡니다.'}
+8. 녹음에 없는 내용은 지어내지 않습니다. 잘 들리지 않는 부분은 추측하지 않습니다.
+9. 출력 언어: ${lang}`;
+}
+async function generate(part,m,withTr,onP){
+  onP('Gemini가 회의 내용을 분석 중… (회의 길이에 따라 몇 분 걸립니다)');
+  const body={contents:[{role:'user',parts:[part,{text:buildPrompt(m,withTr)}]}],generationConfig:{responseMimeType:'application/json',responseSchema:SCHEMA,temperature:0.2}};
+  const j=await (await gfetch(GBASE+'/v1beta/models/'+encodeURIComponent(S.model)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+  if(j.promptFeedback?.blockReason)throw new Error('Gemini가 요청을 차단했습니다: '+j.promptFeedback.blockReason);
+  const c=j.candidates?.[0];const txt=(c?.content?.parts||[]).filter(p=>!p.thought).map(p=>p.text||'').join('');
+  try{return JSON.parse(txt)}catch(e){const er=new Error('Gemini 응답을 해석하지 못했습니다'+(c?.finishReason?' ('+c.finishReason+')':''));er.parse=true;throw er}
+}
+async function runGemini(blob,m,onP){
+  const uploaded=[];let mime=cleanMime(blob.type,blob.name||'');
+  const mkPart=async(b,mt)=>{
+    try{const f=await uploadFile(b,mt,onP);uploaded.push(f.name);return {fileData:{mimeType:f.mimeType||mt,fileUri:f.uri}}}
+    catch(e){if((e.status&&e.status<500&&e.status!==404)||b.size>14e6)throw e;onP('음성 전송 중…');return {inlineData:{mimeType:mt,data:await toB64(b)}}}
+  };
+  const gen=async part=>{
+    try{return await generate(part,m,S.includeTranscript,onP)}
+    catch(e){if(e.parse&&S.includeTranscript){onP('응답이 길어 발언록 없이 다시 요청 중…');return await generate(part,m,false,onP)}throw e}
+  };
+  try{
+    let part=await mkPart(blob,mime);
+    try{return await gen(part)}
+    catch(e){
+      if(e.status===400&&!/api.?key/i.test(e.message)&&mime!=='audio/wav'){onP('음성 형식 변환 중…');const wav=await toWav(blob);part=await mkPart(wav,'audio/wav');return await gen(part)}
+      throw e;
+    }
+  }finally{for(const n of uploaded)gfetch(GBASE+'/v1beta/'+n,{method:'DELETE'}).catch(()=>{})}
+}
+function parseTime(t){const p=String(t||'').split(':').map(Number);if(p.some(isNaN))return 0;return p.reduce((a,b)=>a*60+b,0)}
+function applyResult(m,r){
+  const speakers=(r.speakers||[]).map((s,i)=>({id:s.id||('S'+(i+1)),name:(s.guess_name||'').trim()||('화자 '+(i+1)),hint:s.description||''}));
+  const tr=(r.transcript||[]).map(x=>({t:parseTime(x.time),speaker:x.speaker,text:x.text}));
+  for(const x of tr)if(x.speaker&&!speakers.some(s=>s.id===x.speaker))speakers.push({id:x.speaker,name:'화자 '+(speakers.length+1),hint:''});
+  m.result={summary:r.summary||'',topics:(r.topics||[]).map(t=>({title:t.title||'',points:t.points||[]})),decisions:r.decisions||[],
+    actions:(r.action_items||[]).map(a=>({id:uid(),task:a.task||'',owner:a.owner||'',due:/^\d{4}-\d{2}-\d{2}$/.test(a.due||'')?a.due:'',done:false})),
+    speakers,transcript:tr,model:S.model};
+  if(!m.title&&r.title)m.title=r.title;
+}
+const progress={};
+async function analyze(id){
+  const m=M(id);if(!m||m.status==='processing')return;
+  if(!S.apiKey){alert('설정 탭에서 Gemini API 키를 먼저 입력해 주세요.');return}
+  const a=await idbGet('audio',id);if(!a){alert('음성 파일이 없어 요약을 만들 수 없습니다.');return}
+  m.status='processing';m.error='';progress[id]='준비 중…';await saveM(m);render();
+  const onP=t=>{progress[id]=t;const e=$('#prog-'+id);if(e)e.textContent=t};
+  try{
+    const r=await runGemini(a.blob,m,onP);
+    applyResult(m,r);m.status='done';m.summarizedAt=Date.now();
+    toast('회의록이 완성되었습니다');
+  }catch(e){m.status=m.result?'done':'error';m.error=e.message||String(e)}
+  delete progress[id];await saveM(m);render();
+}
+
+/* ───────── 음성 보관 기한 ───────── */
+function audioExpiry(m){return m.hasAudio&&m.summarizedAt?m.summarizedAt+S.retentionDays*DAY:null}
+async function dropAudio(m){await idbDel('audio',m.id);m.hasAudio=false;m.audioDeletedAt=Date.now();await saveM(m)}
+async function purgeAudio(){let n=0;for(const m of state.meetings){const x=audioExpiry(m);if(x&&x<Date.now()&&m.status!=='processing'){await dropAudio(m);n++}}return n}
+
+/* ───────── 내보내기 ───────── */
+function fileBase(m){return (ymd(m.date)+'_'+(m.title||m.category||'회의록')).replace(/[\\/:*?"<>|]/g,' ').trim()}
+function toMarkdown(m,withTr){
+  const r=m.result||{},L=[];
+  L.push('# '+(m.title||'(제목 없음)'),'',`- 종류: ${m.category}`,`- 일시: ${fmtDate(m.date)}${m.durationSec?' ('+fmtDur(m.durationSec)+')':''}`);
+  const who=m.attendees||(r.speakers||[]).map(s=>s.name).join(', ');if(who)L.push('- 참석자: '+who);
+  if(r.summary)L.push('','## 요약',resolve(m,r.summary));
+  if(r.topics?.length){L.push('','## 주요 논의');for(const t of r.topics){L.push('','### '+resolve(m,t.title));for(const p of t.points)L.push('- '+resolve(m,p))}}
+  if(r.decisions?.length){L.push('','## 결정 사항');for(const d of r.decisions)L.push('- '+resolve(m,d))}
+  if(r.actions?.length){L.push('','## Action Items','','| No | 내용 | 담당 | 기한 | 상태 |','|---|---|---|---|---|');
+    r.actions.forEach((a,i)=>L.push(`| ${i+1} | ${resolve(m,a.task).replace(/\|/g,'/')} | ${ownerName(m,a.owner)||'-'} | ${a.due||'-'} | ${a.done?'완료':'진행'} |`))}
+  if(withTr&&r.transcript?.length){L.push('','## 발언록');for(const s of r.transcript)L.push(`- [${fmtDur(s.t)}] **${spkName(m,s.speaker)}**: ${s.text}`)}
+  return L.join('\n');
+}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
+function printPDF(m){
+  const r=m.result||{};const who=m.attendees||(r.speakers||[]).map(s=>s.name).join(', ');
+  let h=`<h1>${esc(m.title||'(제목 없음)')}</h1><div class="pm">${esc(m.category)} · ${esc(fmtDate(m.date))}${m.durationSec?' · '+fmtDur(m.durationSec):''}${who?'<br>참석자: '+esc(who):''}</div>`;
+  if(r.summary)h+=`<h2>요약</h2><div>${esc(resolve(m,r.summary))}</div>`;
+  if(r.topics?.length){h+='<h2>주요 논의</h2>';for(const t of r.topics)h+=`<div class="tt">${esc(resolve(m,t.title))}</div><ul>${t.points.map(p=>'<li>'+esc(resolve(m,p))+'</li>').join('')}</ul>`}
+  if(r.decisions?.length)h+=`<h2>결정 사항</h2><ul>${r.decisions.map(d=>'<li>'+esc(resolve(m,d))+'</li>').join('')}</ul>`;
+  if(r.actions?.length)h+=`<h2>Action Items</h2><table><tr><th style="width:8%">No</th><th>내용</th><th style="width:18%">담당</th><th style="width:16%">기한</th><th style="width:10%">상태</th></tr>${
+    r.actions.map((a,i)=>`<tr><td>${i+1}</td><td>${esc(resolve(m,a.task))}</td><td>${esc(ownerName(m,a.owner)||'-')}</td><td>${esc(a.due||'-')}</td><td>${a.done?'완료':'진행'}</td></tr>`).join('')}</table>`;
+  if(state.pdfTranscript&&r.transcript?.length)h+='<h2>발언록</h2>'+r.transcript.map(s=>`<div class="tr">[${fmtDur(s.t)}] <b>${esc(spkName(m,s.speaker))}</b>: ${esc(s.text)}</div>`).join('');
+  h+=`<div class="ft">AI(Gemini) 요약을 바탕으로 작성한 회의록입니다. 출력일 ${ymd(Date.now())}</div>`;
+  $('#print').innerHTML=h;const old=document.title;document.title=fileBase(m);
+  const back=()=>{document.title=old;window.removeEventListener('afterprint',back)};window.addEventListener('afterprint',back);
+  window.print();
+}
+
+/* ───────── 화면 ───────── */
+function catOpts(sel){const cs=S.categories.includes(sel)||!sel?S.categories:[sel,...S.categories];return cs.map(c=>`<option${c===sel?' selected':''}>${esc(c)}</option>`).join('')}
+function viewRecord(){
+  const d=state.draft;
+  const form=`<div class="grid2">
+    <label class="f">회의 제목 <input type="text" data-ch="draft" data-k="title" value="${esc(d.title)}" placeholder="비워 두면 AI가 제안합니다"></label>
+    <label class="f">회의 종류 <select data-ch="draft" data-k="category">${catOpts(d.category)}</select></label></div>
+    <label class="f">참석자 (쉼표로 구분, 선택) <input type="text" data-ch="draft" data-k="attendees" value="${esc(d.attendees)}" placeholder="예: JinHoon Jung, MinGyo Kim — 화자 이름 지정에 도움이 됩니다"></label>`;
+  if(rec)return `<div class="card"><div class="recbox ${rec.pauseAt?'paused':''}">
+      <div class="muted"><span class="dot"></span>${rec.pauseAt?'일시정지됨':'녹음 중'}</div>
+      <div class="timer" id="recTimer">${fmtDur(recElapsed())}</div>
+      <div class="meter"><i id="meter"></i></div>
+      <div class="row" style="justify-content:center">
+        <button class="btn" data-act="pauseRec">${rec.pauseAt?'▶ 이어서 녹음':'⏸ 일시정지'}</button>
+        <button class="btn pri" data-act="stopRec">■ 종료하고 저장</button>
+        <button class="btn danger" data-act="cancelRec">취소</button></div>
+      <p class="small muted">녹음 중에는 이 탭을 닫지 마세요. 휴대폰은 화면을 켠 채로 두어야 합니다.</p>
+    </div></div><div class="card">${form}</div>`;
+  const canSys=!!navigator.mediaDevices?.getDisplayMedia&&!/Android|iPhone|iPad/i.test(navigator.userAgent);
+  return `<div class="card"><h2>새 회의 녹음</h2>${form}
+    ${canSys?`<label class="small" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><input type="checkbox" data-ch="draft" data-k="sys" ${d.sys?'checked':''} style="margin-top:4px"><span>온라인 회의(Teams 등) 소리도 함께 녹음 — 시작할 때 공유할 탭/화면을 고르고 "오디오 공유"를 켭니다</span></label>`:''}
+    <div class="recbox"><button class="recbtn" data-act="startRec">녹음<br>시작</button>
+      <p class="muted small">종료하면 음성이 이 기기에 저장되고${S.apiKey?' Gemini가 자동으로 요약합니다.':', API 키를 넣으면 요약할 수 있습니다.'}</p></div>
+    ${S.apiKey?'':'<div class="note warn">Gemini API 키가 아직 없습니다. <button class="link" data-act="nav" data-v="settings">설정</button>에서 입력해 주세요.</div>'}
+    <div class="row"><span class="small muted">이미 녹음한 파일이 있다면</span>
+      <label class="btn sm">음성 파일 불러오기<input type="file" id="impAudio" accept="audio/*,video/mp4,video/webm,.m4a,.mp3,.wav,.ogg,.webm,.aac,.flac" hidden></label></div>
+  </div>`;
+}
+function statusBadge(m){
+  if(m.status==='processing')return '<span class="badge warn">요약 중</span>';
+  if(m.status==='error')return '<span class="badge red">요약 실패</span>';
+  if(m.status==='recorded')return '<span class="badge warn">요약 전</span>';
+  return '';
+}
+function viewList(){
+  const q=state.q.trim().toLowerCase();
+  const counts={};for(const m of state.meetings)counts[m.category]=(counts[m.category]||0)+1;
+  const cats=[...new Set([...S.categories,...Object.keys(counts)])].filter(c=>counts[c]);
+  const list=state.meetings.filter(m=>(!state.cat||m.category===state.cat)&&(!q||JSON.stringify([m.title,m.attendees,m.category,m.result?.summary,m.result?.topics,m.result?.decisions,m.result?.actions?.map(a=>a.task)]).toLowerCase().includes(q)))
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return `<div class="row"><h2 style="margin:0">회의록 보관함</h2><span class="sp"></span>
+      <input type="search" id="q" placeholder="제목·내용 검색" value="${esc(state.q)}" style="flex:1;min-width:160px;max-width:300px"></div>
+    <div class="chips"><button class="chip ${state.cat?'':'on'}" data-act="cat" data-c="">전체 ${state.meetings.length}</button>
+      ${cats.map(c=>`<button class="chip ${state.cat===c?'on':''}" data-act="cat" data-c="${esc(c)}">${esc(c)} ${counts[c]}</button>`).join('')}</div>
+    <div id="listBody">${list.length?list.map(m=>{const open=(m.result?.actions||[]).filter(a=>!a.done).length;
+      return `<button class="item" data-act="open" data-id="${m.id}">
+        <div class="meta"><span class="badge">${esc(m.category)}</span><span>${esc(fmtDate(m.date))}</span>${m.durationSec?`<span>${fmtDur(m.durationSec)}</span>`:''}${statusBadge(m)}
+          ${open?`<span class="badge gray">Action ${open}</span>`:''}${m.hasAudio?'<span class="badge gray">음성 보관 중</span>':''}</div>
+        <div class="t">${esc(m.title||'(제목 없음)')}</div>
+        ${m.result?.summary?`<div class="s small muted">${esc(resolve(m,m.result.summary))}</div>`:''}</button>`}).join('')
+      :`<div class="empty">${state.meetings.length?'조건에 맞는 회의록이 없습니다.':'아직 회의록이 없습니다.<br>녹음 탭에서 첫 회의를 녹음해 보세요.<br><br><button class="btn sm" data-act="sample">샘플 회의록 넣어 보기</button>'}</div>`}</div>`;
+}
+function viewDetail(m){
+  let audio='';
+  if(m.hasAudio){const x=audioExpiry(m);
+    audio=`<div class="card"><div class="row"><h3 style="margin:0">녹음 음성</h3><span class="small muted">${fmtSize(m.audioSize||0)}</span><span class="sp"></span>
+      <span class="small muted">${x?`${ymd(x)} 자동 삭제 (${Math.max(0,Math.ceil((x-Date.now())/DAY))}일 남음)`:`요약 생성 후 ${S.retentionDays}일 뒤 자동 삭제`}</span></div>
+      <audio id="player" controls preload="metadata"></audio>
+      <div class="row" style="margin-top:8px"><button class="btn sm" data-act="dlAudio">음성 내려받기</button><button class="btn sm danger" data-act="delAudio">음성 지금 삭제</button></div></div>`;
+  }else audio=`<div class="small muted" style="margin:0 4px 12px">음성은 삭제되었습니다${m.audioDeletedAt?' ('+ymd(m.audioDeletedAt)+')':''}. 회의록은 계속 보관됩니다.</div>`;
+  const busy=m.status==='processing';
+  return `<div class="row" style="margin-bottom:10px"><button class="btn sm" data-act="nav" data-v="list">← 목록</button><span class="sp"></span>${statusBadge(m)}</div>
+  <div class="card">
+    <input class="title-in" type="text" data-ch="m" data-k="title" value="${esc(m.title)}" placeholder="회의 제목">
+    <div class="grid2" style="margin-top:12px">
+      <label class="f">회의 종류 <select data-ch="m" data-k="category">${catOpts(m.category)}</select></label>
+      <label class="f">일시 <input type="datetime-local" data-ch="m" data-k="date" value="${toLocalInput(m.date)}"></label></div>
+    <label class="f">참석자 <input type="text" data-ch="m" data-k="attendees" value="${esc(m.attendees)}" placeholder="쉼표로 구분"></label>
+    ${busy?`<div class="note info"><span class="spin"></span><span id="prog-${m.id}">${esc(progress[m.id]||'처리 중…')}</span></div>`:''}
+    ${m.error?`<div class="note err">요약 중 오류: ${esc(m.error)}</div>`:''}
+    <div class="row">
+      ${m.hasAudio?`<button class="btn ${m.result?'':'pri'}" data-act="analyze" ${busy?'disabled':''}>${m.result?'AI 요약 다시 만들기':'AI 요약 만들기'}</button>`:''}
+      ${m.result?`<button class="btn pri" data-act="pdf">PDF로 저장</button><button class="btn" data-act="md">Markdown</button><button class="btn" data-act="copy">텍스트 복사</button>
+        <label class="small row"><input type="checkbox" data-ch="pdfTr" ${state.pdfTranscript?'checked':''}> 발언록 포함</label>`:''}
+      <span class="sp"></span><button class="btn danger" data-act="delMeeting">회의록 삭제</button></div>
+  </div>
+  ${audio}
+  <div id="resultBody">${m.result?resultHTML(m):''}</div>`;
+}
+const ed=(m,path,val,tag='span',cls='')=>`<${tag} class="ed ${cls}" contenteditable="plaintext-only" data-path="${path}">${esc(resolve(m,val))}</${tag}>`;
+function resultHTML(m){
+  const r=m.result;const names=[...new Set([...(m.attendees||'').split(',').map(s=>s.trim()).filter(Boolean),...r.speakers.map(s=>s.name)])];
+  const cnt={};for(const s of r.transcript)cnt[s.speaker]=(cnt[s.speaker]||0)+1;
+  return `<datalist id="names">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+  <div class="card"><h3>화자 지정</h3>
+    <p class="small muted" style="margin-top:0">AI가 목소리로 구분한 화자입니다. 이름을 바꾸면 요약·Action item·발언록에 모두 반영됩니다.${m.hasAudio&&r.transcript.length?' ▶를 누르면 그 사람의 목소리를 들을 수 있습니다.':''}</p>
+    ${r.speakers.map((s,i)=>`<div class="spk"><i style="background:${SPK_COLORS[i%SPK_COLORS.length]}"></i>
+      <input type="text" list="names" data-ch="spk" data-id="${esc(s.id)}" value="${esc(s.name)}" aria-label="화자 이름">
+      <span class="small muted hint">${esc(s.hint)}${cnt[s.id]?` · 발언 ${cnt[s.id]}회`:''}</span>
+      ${m.hasAudio&&cnt[s.id]?`<button class="btn sm" data-act="hear" data-id="${esc(s.id)}" title="목소리 듣기">▶</button>`:'<span></span>'}</div>`).join('')||'<div class="small muted">구분된 화자가 없습니다.</div>'}
+  </div>
+  <div class="card"><h3>요약</h3>${ed(m,'summary',r.summary,'div')}</div>
+  <div class="card"><h3>주요 논의</h3>${r.topics.map((t,i)=>`${ed(m,`topics.${i}.title`,t.title,'div','topic-t')}<ul class="pts">${t.points.map((p,j)=>`<li>${ed(m,`topics.${i}.points.${j}`,p)}</li>`).join('')}</ul>`).join('')||'<div class="small muted">없음</div>'}</div>
+  <div class="card"><h3>결정 사항</h3><ul class="pts">${r.decisions.map((d,i)=>`<li>${ed(m,`decisions.${i}`,d)}</li>`).join('')}</ul>
+    <button class="btn sm" data-act="addDecision">+ 결정 사항 추가</button></div>
+  <div class="card"><h3>Action Items</h3>
+    ${r.actions.map(a=>`<div class="act ${a.done?'done':''}" data-aid="${a.id}">
+      <input type="checkbox" data-ch="act" data-k="done" ${a.done?'checked':''} aria-label="완료">
+      <input class="task" type="text" data-ch="act" data-k="task" value="${esc(resolve(m,a.task))}" placeholder="할 일">
+      <input class="own" type="text" list="names" data-ch="act" data-k="owner" value="${esc(ownerName(m,a.owner))}" placeholder="담당">
+      <input class="due" type="date" data-ch="act" data-k="due" value="${esc(a.due)}">
+      <button class="x" data-act="delAct" title="삭제">×</button></div>`).join('')}
+    <button class="btn sm" data-act="addAct" style="margin-top:10px">+ Action item 추가</button></div>
+  ${r.transcript.length?`<div class="card"><details><summary>발언록 (${r.transcript.length}개 발언)</summary>
+    <p class="small muted">시간을 누르면 그 지점부터 재생합니다. 화자가 잘못 지정된 발언은 바로 고칠 수 있습니다.</p>
+    ${r.transcript.map((s,i)=>`<div class="seg"><button class="tm" data-act="seek" data-t="${s.t}">${fmtDur(s.t)}</button>
+      <select data-ch="seg" data-i="${i}">${r.speakers.map(k=>`<option value="${esc(k.id)}"${k.id===s.speaker?' selected':''}>${esc(k.name)}</option>`).join('')}</select>
+      <span class="ed tx" contenteditable="plaintext-only" data-path="transcript.${i}.text">${esc(s.text)}</span></div>`).join('')}
+  </details></div>`:''}`;
+}
+function viewActions(){
+  const all=[];for(const m of state.meetings)for(const a of m.result?.actions||[])all.push({m,a,owner:ownerName(m,a.owner)});
+  const owners=[...new Set(all.map(x=>x.owner).filter(Boolean))].sort();
+  const list=all.filter(x=>(!state.openOnly||!x.a.done)&&(!state.owner||x.owner===state.owner))
+    .sort((x,y)=>(x.a.done-y.a.done)||((x.a.due||'9999')<(y.a.due||'9999')?-1:1));
+  const today=ymd(Date.now());
+  return `<div class="row" style="margin-bottom:12px"><h2 style="margin:0">Action Items</h2><span class="sp"></span>
+    <select data-ch="ownerF"><option value="">담당자 전체</option>${owners.map(o=>`<option${o===state.owner?' selected':''}>${esc(o)}</option>`).join('')}</select>
+    <label class="small row"><input type="checkbox" data-ch="openOnly" ${state.openOnly?'checked':''}> 미완료만</label></div>
+  <div class="card">${list.length?list.map(({m,a,owner})=>`<div class="gact ${a.done?'done':''}">
+      <input type="checkbox" data-ch="gact" data-mid="${m.id}" data-aid="${a.id}" ${a.done?'checked':''} aria-label="완료">
+      <div><div class="tk">${esc(resolve(m,a.task))}</div>
+        <div class="meta">${owner?`<span>담당 ${esc(owner)}</span>`:''}<button class="link" data-act="open" data-id="${m.id}">${esc(m.title||'(제목 없음)')} · ${ymd(m.date)}</button></div></div>
+      <div>${a.due?`<span class="badge ${!a.done&&a.due<today?'red':'gray'}">${esc(a.due)}</span>`:''}</div></div>`).join('')
+    :`<div class="empty">${all.length?'미완료 Action item이 없습니다.':'회의록이 만들어지면 Action item이 여기에 모입니다.'}</div>`}</div>`;
+}
+function viewSettings(){
+  const models=[...new Set([S.model,...S.models])].filter(Boolean);
+  return `<div class="card"><h2>Gemini AI 연결</h2>
+    <label class="f">Gemini API 키 <input type="password" id="apiKey" value="${esc(S.apiKey)}" placeholder="AIza… 로 시작하는 키" autocomplete="off"></label>
+    <div class="row" style="margin-bottom:12px"><button class="btn pri" data-act="saveKey">저장하고 연결 확인</button>
+      <a class="small" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">API 키 발급 (Google AI Studio)</a></div>
+    <div class="grid2"><label class="f">사용 모델 <select data-ch="set" data-k="model">${models.map(x=>`<option${x===S.model?' selected':''}>${esc(x)}</option>`).join('')}</select></label>
+      <label class="f">회의록 언어 <select data-ch="set" data-k="lang"><option value="ko"${S.lang==='ko'?' selected':''}>한국어</option><option value="en"${S.lang==='en'?' selected':''}>English</option></select></label></div>
+    <label class="small row"><input type="checkbox" data-ch="set" data-k="includeTranscript" ${S.includeTranscript?'checked':''}> 발언록(화자별 발언 기록)도 함께 만들기</label>
+    <div class="note warn">API 키는 이 기기의 브라우저에만 저장됩니다. 녹음 음성은 요약을 위해 Google Gemini 서버로 전송되므로, 회사의 외부 AI 사용·회의 녹음 정책을 먼저 확인해 주세요. 무료 등급 키는 입력 내용이 Google의 서비스 개선에 쓰일 수 있습니다.</div></div>
+  <div class="card"><h2>음성 보관 기간</h2>
+    <label class="f" style="max-width:260px">요약 완료 후 음성 자동 삭제 (일) <input type="number" min="1" max="365" data-ch="set" data-k="retentionDays" value="${S.retentionDays}"></label>
+    <p class="small muted">요약이 만들어진 음성만 기간이 지나면 지웁니다. 요약 전인 음성은 지우지 않습니다. 삭제는 앱을 열 때 실행됩니다.</p>
+    <div class="small muted" id="usage"></div></div>
+  <div class="card"><h2>회의 종류</h2><div id="cats">${S.categories.map((c,i)=>`<div class="catrow"><input type="text" data-ch="catName" data-i="${i}" value="${esc(c)}"><button class="btn sm danger" data-act="delCat" data-i="${i}">삭제</button></div>`).join('')}</div>
+    <div class="catrow" style="margin-top:10px"><input type="text" id="newCat" placeholder="새 종류 이름"><button class="btn sm" data-act="addCat">추가</button></div></div>
+  <div class="card"><h2>백업 · 기기 간 옮기기</h2>
+    <p class="small muted">회의록은 이 기기의 브라우저 안에 저장됩니다. 브라우저 데이터를 지우면 사라지므로 가끔 백업해 두세요. 백업 파일을 다른 기기에서 가져오면 회의록이 합쳐집니다(음성 제외).</p>
+    <div class="row"><button class="btn" data-act="backup">백업 파일 내려받기</button>
+      <label class="btn">백업 가져오기<input type="file" id="impBackup" accept=".json,application/json" hidden></label></div></div>
+  <div class="card"><h2>사용 안내</h2><ul class="pts small">
+    <li>PC: 이 HTML 파일을 Chrome이나 Edge로 열면 됩니다. 마이크 권한을 허용해 주세요.</li>
+    <li>휴대폰: 마이크는 https 주소에서만 동작합니다. 파일을 https로 호스팅해 열거나, 휴대폰 기본 녹음 앱으로 녹음한 뒤 "음성 파일 불러오기"를 쓰세요.</li>
+    <li>PDF: "PDF로 저장"을 누르면 인쇄 창이 뜹니다. 대상(프린터)을 "PDF로 저장"으로 고르세요.</li></ul></div>`;
+}
+const TABS=[['record','녹음'],['list','회의록'],['actions','Action Items'],['settings','설정']];
+let audioURL=null;
+function render(){
+  const v=state.view;
+  $('#tabs').innerHTML=TABS.map(([k,n])=>`<button class="${(v===k||(v==='detail'&&k==='list'))?'on':''}" data-act="nav" data-v="${k}">${n}</button>`).join('');
+  const m=v==='detail'?M(state.cur):null;
+  if(v==='detail'&&!m){state.view='list';return render()}
+  $('#main').innerHTML=v==='record'?viewRecord():v==='list'?viewList():v==='actions'?viewActions():v==='settings'?viewSettings():viewDetail(m);
+  if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}
+  if(m&&m.hasAudio)idbGet('audio',m.id).then(a=>{const p=$('#player');if(a&&p&&state.cur===m.id){audioURL=URL.createObjectURL(a.blob);p.src=audioURL}});
+  if(v==='settings'&&navigator.storage?.estimate)navigator.storage.estimate().then(e=>{const u=$('#usage');if(u)u.textContent=`현재 저장 공간 사용: ${fmtSize(e.usage||0)} · 음성 보관 중 ${state.meetings.filter(x=>x.hasAudio).length}건`});
+}
+function renderResult(){const m=M(state.cur);const b=$('#resultBody');if(m&&b){const open=$('details',b)?.open;b.innerHTML=m.result?resultHTML(m):'';if(open&&$('details',b))$('details',b).open=true}}
+function getPath(o,p){return p.split('.').reduce((a,k)=>a?.[k],o)}
+function setPath(o,p,v){const ks=p.split('.');const last=ks.pop();const t=ks.reduce((a,k)=>a[k],o);if(v===null&&Array.isArray(t))t.splice(+last,1);else t[last]=v}
+function seek(t){const p=$('#player');if(!p||!p.src){toast('음성이 삭제되어 재생할 수 없습니다');return}p.currentTime=Math.max(0,t);p.play().catch(()=>{})}
+
+/* ───────── 이벤트 ───────── */
+const ACT={
+  nav(el){state.view=el.dataset.v;render();window.scrollTo(0,0)},
+  startRec, pauseRec, stopRec(){stopRec(false)},
+  cancelRec(){if(confirm('녹음을 저장하지 않고 버릴까요?'))stopRec(true)},
+  cat(el){state.cat=el.dataset.c;render()},
+  open(el){state.cur=el.dataset.id;state.view='detail';render();window.scrollTo(0,0)},
+  analyze(){const m=M(state.cur);if(m.result&&!confirm('요약을 다시 만들면 지금 내용(직접 고친 부분, 화자 이름, 완료 표시)이 새 결과로 바뀝니다. 계속할까요?'))return;analyze(m.id)},
+  pdf(){printPDF(M(state.cur))},
+  md(){const m=M(state.cur);download(fileBase(m)+'.md',toMarkdown(m,state.pdfTranscript),'text/markdown;charset=utf-8')},
+  async copy(){const m=M(state.cur);try{await navigator.clipboard.writeText(toMarkdown(m,state.pdfTranscript));toast('회의록을 복사했습니다')}catch(e){toast('복사하지 못했습니다')}},
+  async delMeeting(){const m=M(state.cur);if(!confirm('이 회의록'+(m.hasAudio?'과 음성':'')+'을 삭제할까요? 되돌릴 수 없습니다.'))return;
+    await idbDel('audio',m.id);await idbDel('meetings',m.id);state.meetings=state.meetings.filter(x=>x!==m);state.view='list';render()},
+  async delAudio(){const m=M(state.cur);if(!confirm((m.result?'':'아직 요약을 만들지 않았습니다. ')+'음성을 지금 삭제할까요? 되돌릴 수 없습니다.'))return;await dropAudio(m);render()},
+  async dlAudio(){const m=M(state.cur);const a=await idbGet('audio',m.id);if(!a)return;const ext=({'audio/webm':'webm','audio/ogg':'ogg','audio/mp4':'m4a','audio/m4a':'m4a','audio/mp3':'mp3','audio/wav':'wav'})[cleanMime(a.blob.type,a.blob.name||'')]||'webm';
+    const l=document.createElement('a');l.href=URL.createObjectURL(a.blob);l.download=fileBase(m)+'.'+ext;document.body.appendChild(l);l.click();l.remove()},
+  hear(el){const m=M(state.cur);const s=m.result.transcript.find(x=>x.speaker===el.dataset.id);if(s)seek(s.t)},
+  seek(el){seek(+el.dataset.t)},
+  addAct(){const m=M(state.cur);m.result.actions.push({id:uid(),task:'',owner:'',due:'',done:false});saveM(m);renderResult();const ins=document.querySelectorAll('.act .task');ins[ins.length-1]?.focus()},
+  delAct(el){const m=M(state.cur);const id=el.closest('.act').dataset.aid;m.result.actions=m.result.actions.filter(a=>a.id!==id);saveM(m);renderResult()},
+  addDecision(){const m=M(state.cur);m.result.decisions.push('새 결정 사항');saveM(m);renderResult();const e=document.querySelectorAll('[data-path^="decisions."]');e[e.length-1]?.focus()},
+  async saveKey(){S.apiKey=$('#apiKey').value.trim();saveS();if(!S.apiKey){toast('API 키를 지웠습니다');return render()}
+    try{const l=await loadModels();toast('연결되었습니다 · 모델 '+l.length+'개');render()}catch(e){alert('연결 확인 실패: '+e.message)}},
+  addCat(){const v=$('#newCat').value.trim();if(v&&!S.categories.includes(v)){S.categories.push(v);saveS();render()}},
+  delCat(el){if(S.categories.length<2)return;const c=S.categories[+el.dataset.i];if(!confirm(`"${c}" 종류를 목록에서 뺄까요? 이미 기록된 회의록의 종류는 그대로 남습니다.`))return;S.categories.splice(+el.dataset.i,1);saveS();render()},
+  backup(){const s=Object.assign({},S);delete s.apiKey;download('회의록_백업_'+ymd(Date.now())+'.json',JSON.stringify({app:'meeting-minutes',version:1,exportedAt:new Date().toISOString(),settings:s,meetings:state.meetings}),'application/json')},
+  async sample(){const m=sampleMeeting();await saveM(m);state.meetings.unshift(m);render()},
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(el&&ACT[el.dataset.act]){ACT[el.dataset.act](el,e)}});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='q'){state.q=t.value;const tmp=document.createElement('div');tmp.innerHTML=viewList();$('#listBody').innerHTML=$('#listBody',tmp).innerHTML}
+  else if(t.dataset.ch==='draft'&&t.type!=='checkbox')state.draft[t.dataset.k]=t.value;
+});
+document.addEventListener('change',async e=>{const t=e.target,ch=t.dataset.ch;
+  if(t.id==='impAudio'){await importAudio(t.files[0]);return}
+  if(t.id==='impBackup'){await importBackup(t.files[0]);return}
+  if(!ch)return;const m=M(state.cur);
+  if(ch==='draft'){state.draft[t.dataset.k]=t.type==='checkbox'?t.checked:t.value}
+  else if(ch==='m'){const k=t.dataset.k;if(k==='date'){if(t.value)m.date=new Date(t.value).toISOString()}else m[k]=t.value.trim();await saveM(m);if(k==='attendees')renderResult()}
+  else if(ch==='pdfTr')state.pdfTranscript=t.checked;
+  else if(ch==='spk'){const s=m.result.speakers.find(x=>x.id===t.dataset.id);s.name=t.value.trim()||s.name;await saveM(m);renderResult()}
+  else if(ch==='act'){const row=t.closest('.act'),a=m.result.actions.find(x=>x.id===row.dataset.aid),k=t.dataset.k;
+    if(k==='done'){a.done=t.checked;row.classList.toggle('done',a.done)}else if(k==='owner')a.owner=ownerStore(m,t.value);
+    else if(k==='task'){if(t.value!==resolve(m,a.task))a.task=t.value}else a[k]=t.value;await saveM(m)}
+  else if(ch==='seg'){m.result.transcript[+t.dataset.i].speaker=t.value;await saveM(m)}
+  else if(ch==='gact'){const mm=M(t.dataset.mid),a=mm.result.actions.find(x=>x.id===t.dataset.aid);a.done=t.checked;await saveM(mm);render()}
+  else if(ch==='openOnly'){state.openOnly=t.checked;render()}
+  else if(ch==='ownerF'){state.owner=t.value;render()}
+  else if(ch==='set'){const k=t.dataset.k;S[k]=t.type==='checkbox'?t.checked:k==='retentionDays'?Math.max(1,Math.min(365,+t.value||14)):t.value;saveS()}
+  else if(ch==='catName'){const i=+t.dataset.i,old=S.categories[i],v=t.value.trim();if(!v||S.categories.includes(v)){t.value=old;return}
+    S.categories[i]=v;saveS();for(const x of state.meetings)if(x.category===old){x.category=v;await saveM(x)}if(state.draft.category===old)state.draft.category=v;toast('종류 이름을 바꿨습니다')}
+});
+document.addEventListener('focusin',e=>{const t=e.target;if(t.classList?.contains('ed')){const m=M(state.cur);const raw=getPath(m.result,t.dataset.path);if(raw!==undefined)t.textContent=raw}});
+document.addEventListener('focusout',async e=>{const t=e.target;if(!t.classList?.contains('ed'))return;const m=M(state.cur);if(!m?.result)return;
+  const p=t.dataset.path,v=t.textContent.replace(/\s+/g,' ').trim();
+  if(getPath(m.result,p)===undefined)return;
+  if(!v&&/\.\d+$/.test(p)&&!p.startsWith('transcript')){setPath(m.result,p,null);await saveM(m);renderResult();return}
+  setPath(m.result,p,v);await saveM(m);t.textContent=p.startsWith('transcript')?v:resolve(m,v)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList?.contains('ed')){e.preventDefault();e.target.blur()}});
+window.addEventListener('beforeunload',e=>{if(rec||state.meetings.some(m=>m.status==='processing')){e.preventDefault();e.returnValue=''}});
+
+async function importBackup(file){
+  if(!file)return;
+  try{const j=JSON.parse(await file.text());if(!Array.isArray(j.meetings))throw new Error('회의록 백업 파일이 아닙니다');
+    let n=0;for(const x of j.meetings){if(!x.id||!x.date)continue;const old=M(x.id);
+      if(old){if(old.hasAudio)continue;Object.assign(old,x,{hasAudio:false});await saveM(old)}
+      else{x.hasAudio=false;if(x.status!=='done')x.status=x.result?'done':'recorded';state.meetings.push(x);await saveM(x)}n++}
+    for(const c of j.settings?.categories||[])if(!S.categories.includes(c))S.categories.push(c);saveS();
+    toast(n+'건을 가져왔습니다');render()}catch(e){alert('가져오기 실패: '+e.message)}
+}
+function sampleMeeting(){
+  return {id:uid(),title:'[샘플] 11월 Weekly FCST 점검',category:'Weekly FCST',attendees:'',date:new Date().toISOString(),createdAt:Date.now(),durationSec:1560,status:'done',hasAudio:false,summarizedAt:Date.now(),
+    result:{summary:'11월 착지 전망과 전시장별 갭을 점검했다. [S1]은 수도권 계약 흐름이 목표 대비 느리다고 보고했고, [S2]는 지방 리테일러의 장기재고 소진 계획을 공유했다. 다음 주까지 전시장별 보완 계획을 받기로 했다.',
+      topics:[{title:'11월 착지 전망',points:['수도권 계약 속도가 전월 같은 시점보다 느림','월말 출고 가능 잔고를 전시장별로 다시 확인하기로 함']},{title:'장기재고 소진',points:['120일 이상 재고는 리테일러별 주간 계획으로 관리','프로모션 적용 대상 차량 목록 재공유 필요']}],
+      decisions:['전시장별 보완 계획을 다음 주 FCST 전까지 취합한다'],
+      actions:[{id:uid(),task:'수도권 전시장별 월말 출고 가능 잔고 재확인',owner:'S1',due:ymd(Date.now()+3*DAY),done:false},{id:uid(),task:'지방 리테일러 장기재고 주간 소진 계획 취합',owner:'S2',due:ymd(Date.now()+5*DAY),done:false},{id:uid(),task:'프로모션 적용 차량 목록 재공유',owner:'',due:'',done:true}],
+      speakers:[{id:'S1',name:'화자 1',hint:'수도권 실적 보고'},{id:'S2',name:'화자 2',hint:'지방 리테일러·재고 담당'},{id:'S3',name:'화자 3',hint:'회의 진행'}],
+      transcript:[{t:0,speaker:'S3',text:'11월 주간 전망부터 보겠습니다.'},{t:14,speaker:'S1',text:'수도권은 계약 속도가 지난달 같은 시점보다 느립니다.'},{t:95,speaker:'S2',text:'지방은 장기재고 소진 계획을 주 단위로 받고 있습니다.'},{t:210,speaker:'S3',text:'그러면 전시장별 보완 계획을 다음 주 회의 전까지 모으겠습니다.'}]}};
+}
+
+/* ───────── 시작 ───────── */
+(async function init(){
+  try{state.meetings=(await idbAll('meetings')).sort((a,b)=>new Date(b.date)-new Date(a.date))}
+  catch(e){$('#main').innerHTML='<div class="note err">이 브라우저에서 저장소(IndexedDB)를 열 수 없습니다. 시크릿 모드가 아닌 일반 창에서 열어 주세요.</div>';return}
+  for(const m of state.meetings)if(m.status==='processing'){m.status=m.result?'done':'recorded';m.error='요약이 중간에 끊겼습니다. 다시 시도해 주세요.';await saveM(m)}
+  const n=await purgeAudio();
+  if(state.meetings.length)state.view='list';
+  render();if(n)toast(`보관 기간이 지난 음성 ${n}건을 삭제했습니다`);
+})();
+</script>
+</body>
+</html>
